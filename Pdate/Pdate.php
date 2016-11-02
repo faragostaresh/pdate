@@ -417,7 +417,7 @@ class Pdate
         return array(0 => $timestamp, 'seconds' => $seconds, 'minutes' => $minutes, 'hours' => $hours, 'mday' => $mday, 'wday' => $wday, 'mon' => $mon, 'year' => $year, 'yday' => $yday, 'weekday' => $weekday, 'month' => $month);
     }
 
-    public function div($a, $b)
+    public function division($a, $b)
     {
         return (int)($a / $b);
     }
@@ -428,7 +428,7 @@ class Pdate
         static $j_days_in_month = array(31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
         $gy = $g_y - 1600;
         $gm = $g_m - 1;
-        $g_day_no = (365 * $gy + $this->div($gy + 3, 4) - $this->div($gy + 99, 100) + $this->div($gy + 399, 400));
+        $g_day_no = (365 * $gy + $this->division($gy + 3, 4) - $this->division($gy + 99, 100) + $this->division($gy + 399, 400));
 
         for ($i = 0; $i < $gm; ++$i) {
             $g_day_no += $g_days_in_month[$i];
@@ -439,13 +439,13 @@ class Pdate
             $g_day_no++;
         $g_day_no += $g_d - 1;
         $j_day_no = $g_day_no - 79;
-        $j_np = $this->div($j_day_no, 12053); # 12053 = (365 * 33 + 32 / 4)
+        $j_np = $this->division($j_day_no, 12053); # 12053 = (365 * 33 + 32 / 4)
         $j_day_no = $j_day_no % 12053;
-        $jy = (979 + 33 * $j_np + 4 * $this->div($j_day_no, 1461)); # 1461 = (365 * 4 + 4 / 4)
+        $jy = (979 + 33 * $j_np + 4 * $this->division($j_day_no, 1461)); # 1461 = (365 * 4 + 4 / 4)
         $j_day_no %= 1461;
 
         if ($j_day_no >= 366) {
-            $jy += $this->div($j_day_no - 1, 365);
+            $jy += $this->division($j_day_no - 1, 365);
             $j_day_no = ($j_day_no - 1) % 365;
         }
 
@@ -462,7 +462,7 @@ class Pdate
         static $j_days_in_month = array(31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
         $jy = $j_y - 979;
         $jm = $j_m - 1;
-        $j_day_no = (365 * $jy + $this->div($jy, 33) * 8 + $this->div($jy % 33 + 3, 4));
+        $j_day_no = (365 * $jy + $this->division($jy, 33) * 8 + $this->division($jy % 33 + 3, 4));
 
         for ($i = 0; $i < $jm; ++$i) {
             $j_day_no += $j_days_in_month[$i];
@@ -470,14 +470,14 @@ class Pdate
 
         $j_day_no += $j_d - 1;
         $g_day_no = $j_day_no + 79;
-        $gy = (1600 + 400 * $this->div($g_day_no, 146097)); # 146097 = (365 * 400 + 400 / 4 - 400 / 100 + 400 / 400)
+        $gy = (1600 + 400 * $this->division($g_day_no, 146097)); # 146097 = (365 * 400 + 400 / 4 - 400 / 100 + 400 / 400)
         $g_day_no = $g_day_no % 146097;
         $leap = 1;
 
         if ($g_day_no >= 36525) # 36525 = (365 * 100 + 100 / 4)
         {
             $g_day_no--;
-            $gy += (100 * $this->div($g_day_no, 36524)); # 36524 = (365 * 100 + 100 / 4 - 100 / 100)
+            $gy += (100 * $this->division($g_day_no, 36524)); # 36524 = (365 * 100 + 100 / 4 - 100 / 100)
             $g_day_no = $g_day_no % 36524;
             if ($g_day_no >= 365) {
                 $g_day_no++;
@@ -486,13 +486,13 @@ class Pdate
             }
         }
 
-        $gy += (4 * $this->div($g_day_no, 1461)); # 1461 = (365 * 4 + 4 / 4)
+        $gy += (4 * $this->division($g_day_no, 1461)); # 1461 = (365 * 4 + 4 / 4)
         $g_day_no %= 1461;
 
         if ($g_day_no >= 366) {
             $leap = 0;
             $g_day_no--;
-            $gy += $this->div($g_day_no, 365);
+            $gy += $this->division($g_day_no, 365);
             $g_day_no = ($g_day_no % 365);
         }
 
