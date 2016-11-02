@@ -23,22 +23,22 @@ namespace Pdate;
 
 class Pdate
 {
-    public $pdate_month_name = array();
+    public $monthName = array();
 
-    public $pdate_week_name = array();
+    public $weekName = array();
 
-    public $pdate_month_days = array();
+    public $monthDays = array();
 
     public $format = 'c';
 
     public function __construct()
     {
-        $this->pdate_month_name = array('', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند');
-        $this->pdate_week_name = array('شنبه', 'یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنج شنبه', 'جمعه');
-        $this->pdate_month_days = array(0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
+        $this->monthName = array('', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند');
+        $this->weekName = array('شنبه', 'یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنج شنبه', 'جمعه');
+        $this->monthDays = array(0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
     }
 
-    public function pdate($format = '', $timestamp = NULL)
+    public function persianDate($format = '', $timestamp = NULL)
     {
         if (empty($format)) {
             $format = $this->format;
@@ -79,7 +79,7 @@ class Pdate
                     break;
 
                 case 'D':
-                    $result .= substr($this->pdate_week_name[$pWeek], 0, 2);
+                    $result .= substr($this->weekName[$pWeek], 0, 2);
                     break;
 
                 case 'j':
@@ -87,7 +87,7 @@ class Pdate
                     break;
 
                 case 'l':
-                    $result .= $this->pdate_week_name[$pWeek];
+                    $result .= $this->weekName[$pWeek];
                     break;
 
                 case 'N':
@@ -99,7 +99,7 @@ class Pdate
                     break;
 
                 case 'z':
-                    $result .= $this->DayOfYear($pMonth, $pDay);
+                    $result .= $this->dayOfYear($pMonth, $pDay);
                     break;
 
                 case 'S':
@@ -108,12 +108,12 @@ class Pdate
 
                 # Week
                 case 'W':
-                    $result .= ceil($this->DayOfYear($pMonth, $pDay) / 7);
+                    $result .= ceil($this->dayOfYear($pMonth, $pDay) / 7);
                     break;
 
                 # Month
                 case 'F':
-                    $result .= $this->pdate_month_name[$pMonth];
+                    $result .= $this->monthName[$pMonth];
                     break;
 
                 case 'm':
@@ -121,7 +121,7 @@ class Pdate
                     break;
 
                 case 'M':
-                    $result .= substr($this->pdate_month_name[$pMonth], 0, 6);
+                    $result .= substr($this->monthName[$pMonth], 0, 6);
                     break;
 
                 case 'n':
@@ -129,7 +129,7 @@ class Pdate
                     break;
 
                 case 't':
-                    $result .= (($this->isKabise($pYear) && ($pMonth == 12)) ? 30 : $this->pdate_month_days[$pMonth]);
+                    $result .= (($this->isKabise($pYear) && ($pMonth == 12)) ? 30 : $this->monthDays[$pMonth]);
                     break;
 
                 # Years
@@ -180,7 +180,7 @@ class Pdate
                     break;
 
                 case 'r':
-                    $result .= (substr($this->pdate_week_name[$pWeek], 0, 2) . '، ' . $pDay . ' ' . substr($this->pdate_month_name[$pMonth], 0, 6) . ' ' . $pYear . ' ' . date('H::i:s P', $timestamp));
+                    $result .= (substr($this->weekName[$pWeek], 0, 2) . '، ' . $pDay . ' ' . substr($this->monthName[$pMonth], 0, 6) . ' ' . $pYear . ' ' . date('H::i:s P', $timestamp));
                     break;
 
                 case 'U':
@@ -196,7 +196,7 @@ class Pdate
         return $result;
     }
 
-    public function pstrftime($format = '', $timestamp = NULL)
+    public function persianStrftime($format = '', $timestamp = NULL)
     {
         if (empty($format)) {
             $format = $this->format;
@@ -226,11 +226,11 @@ class Pdate
                 switch ($type) {
                     # Day
                     case 'a':
-                        $result .= substr($this->pdate_week_name[$pWeek], 0, 2);
+                        $result .= substr($this->weekName[$pWeek], 0, 2);
                         break;
 
                     case 'A':
-                        $result .= $this->pdate_week_name[$pWeek];
+                        $result .= $this->weekName[$pWeek];
                         break;
 
                     case 'd':
@@ -242,7 +242,7 @@ class Pdate
                         break;
 
                     case 'j':
-                        $dayinM = $this->DayOfYear($pMonth, $pDay);
+                        $dayinM = $this->dayOfYear($pMonth, $pDay);
                         $result .= (($dayinM < 10) ? '00' . $dayinM : ($dayinM < 100) ? '0' . $dayinM : $dayinM);
                         break;
 
@@ -256,22 +256,22 @@ class Pdate
 
                     # Week
                     case 'U':
-                        $result .= floor($this->DayOfYear($pMonth, $pDay) / 7);
+                        $result .= floor($this->dayOfYear($pMonth, $pDay) / 7);
                         break;
 
                     case 'V':
                     case 'W':
-                        $result .= ceil($this->DayOfYear($pMonth, $pDay) / 7);
+                        $result .= ceil($this->dayOfYear($pMonth, $pDay) / 7);
                         break;
 
                     # Month
                     case 'b':
                     case 'h':
-                        $result .= substr($this->pdate_month_name[$pMonth], 0, 6);
+                        $result .= substr($this->monthName[$pMonth], 0, 6);
                         break;
 
                     case 'B':
-                        $result .= $this->pdate_month_name[$pMonth];
+                        $result .= $this->monthName[$pMonth];
                         break;
 
                     case 'm':
@@ -319,7 +319,7 @@ class Pdate
 
                     # Time and Date Stamps
                     case 'c':
-                        $result .= (substr($this->pdate_week_name[$pWeek], 0, 2) . ' ' . substr($this->pdate_month_name[$pMonth], 0, 6) . ' ' . $pDay . ' ' . strftime("%T", $timestamp) . ' ' . $pYear);
+                        $result .= (substr($this->weekName[$pWeek], 0, 2) . ' ' . substr($this->monthName[$pMonth], 0, 6) . ' ' . $pDay . ' ' . strftime("%T", $timestamp) . ' ' . $pYear);
                         break;
 
                     case 'D':
@@ -360,12 +360,12 @@ class Pdate
         return $result;
     }
 
-    public function DayOfYear($pMonth, $pDay)
+    public function dayOfYear($pMonth, $pDay)
     {
         $days = 0;
 
         for ($i = 1; $i < $pMonth; $i++) {
-            $days += $this->pdate_month_days[$i];
+            $days += $this->monthDays[$i];
         }
 
         return ($days + $pDay);
@@ -382,7 +382,7 @@ class Pdate
         return 0;
     }
 
-    public function pmktime($hour = 0, $minute = 0, $second = 0, $month = 0, $day = 0, $year = 0, $is_dst = -1)
+    public function persianMktime($hour = 0, $minute = 0, $second = 0, $month = 0, $day = 0, $year = 0, $is_dst = -1)
     {
         if (($hour == 0) && ($minute == 0) && ($second == 0) && ($month == 0) && ($day == 0) && ($year == 0)) {
             return time();
@@ -392,13 +392,13 @@ class Pdate
         return mktime($hour, $minute, $second, $month, $day, $year, $is_dst);
     }
 
-    public function pcheckdate($month, $day, $year)
+    public function persianCheckDate($month, $day, $year)
     {
         if (($month < 1) || ($month > 12) || ($year < 1) || ($year > 32767) || ($day < 1)) {
             return 0;
         }
 
-        if ($day > $this->pdate_month_days[$month]) {
+        if ($day > $this->monthDays[$month]) {
             if (($month != 12) || ($day != 30) || !$this->isKabise($year)) {
                 return 0;
             }
@@ -407,13 +407,13 @@ class Pdate
         return 1;
     }
 
-    public function pgetdate($timestamp = NULL)
+    public function persianGetDate($timestamp = NULL)
     {
         if (!$timestamp) {
             $timestamp = mktime();
         }
 
-        list($seconds, $minutes, $hours, $mday, $wday, $mon, $year, $yday, $weekday, $month) = explode('-', pdate('s-i-G-j-w-n-Y-z-l-F', $timestamp));
+        list($seconds, $minutes, $hours, $mday, $wday, $mon, $year, $yday, $weekday, $month) = explode('-', $this->persianDate('s-i-G-j-w-n-Y-z-l-F', $timestamp));
         return array(0 => $timestamp, 'seconds' => $seconds, 'minutes' => $minutes, 'hours' => $hours, 'mday' => $mday, 'wday' => $wday, 'mon' => $mon, 'year' => $year, 'yday' => $yday, 'weekday' => $weekday, 'month' => $month);
     }
 
