@@ -24,9 +24,9 @@ namespace Pdate;
 class Pdate
 {
     public $pdate_month_name = array();
-    
+
     public $pdate_week_name = array();
-    
+
     public $pdate_month_days = array();
 
     public $format = 'c';
@@ -41,11 +41,10 @@ class Pdate
     public function pdate($format = '', $timestamp = NULL)
     {
         if (empty($format)) {
-             $format = $this->format;
+            $format = $this->format;
         }
 
-        if(!$timestamp)
-        {
+        if (!$timestamp) {
             $timestamp = time();
         }
 
@@ -54,13 +53,11 @@ class Pdate
         list($pYear, $pMonth, $pDay) = $this->gregorianToJalali($gYear, $gMonth, $gDay);
         $pWeek = ($gWeek + 1);
 
-        if($pWeek >= 7)
-        {
+        if ($pWeek >= 7) {
             $pWeek = 0;
         }
 
-        if($format == '\\')
-        {
+        if ($format == '\\') {
             $format = '//';
         }
 
@@ -68,17 +65,14 @@ class Pdate
         $i = 0;
         $result = '';
 
-        while($i < $lenghFormat)
-        {
+        while ($i < $lenghFormat) {
             $par = $format{$i};
-            if($par == '\\')
-            {
-                $result .= $format{++ $i};
-                $i ++;
+            if ($par == '\\') {
+                $result .= $format{++$i};
+                $i++;
                 continue;
             }
-            switch($par)
-            {
+            switch ($par) {
                 # Day
                 case 'd':
                     $result .= (($pDay < 10) ? ('0' . $pDay) : $pDay);
@@ -155,12 +149,9 @@ class Pdate
                 # Time
                 case 'a':
                 case 'A':
-                    if(date('a', $timestamp) == 'am')
-                    {
+                    if (date('a', $timestamp) == 'am') {
                         $result .= (($par == 'a') ? '.ق.ظ' : 'قبل از ظهر');
-                    }
-                    else
-                    {
+                    } else {
                         $result .= (($par == 'a') ? '.ب.ظ' : 'بعد از ظهر');
                     }
                     break;
@@ -199,30 +190,28 @@ class Pdate
                 default:
                     $result .= $par;
             }
-            $i ++;
+            $i++;
         }
 
         return $result;
     }
-    
+
     public function pstrftime($format = '', $timestamp = NULL)
     {
         if (empty($format)) {
             $format = $this->format;
         }
-        
-        if(!$timestamp)
-        {
-            $timestamp= time();
+
+        if (!$timestamp) {
+            $timestamp = time();
         }
 
         # Create need date parametrs
-        list($gYear, $gMonth, $gDay, $gWeek) = explode ('-', date('Y-m-d-w', $timestamp));
+        list($gYear, $gMonth, $gDay, $gWeek) = explode('-', date('Y-m-d-w', $timestamp));
         list($pYear, $pMonth, $pDay) = $this->gregorianToJalali($gYear, $gMonth, $gDay);
         $pWeek = $gWeek + 1;
 
-        if($pWeek >= 7)
-        {
+        if ($pWeek >= 7) {
             $pWeek = 0;
         }
 
@@ -230,14 +219,11 @@ class Pdate
         $i = 0;
         $result = '';
 
-        while($i < $lenghFormat)
-        {
+        while ($i < $lenghFormat) {
             $par = $format{$i};
-            if($par == '%')
-            {
-                $type= $format{++ $i};
-                switch($type)
-                {
+            if ($par == '%') {
+                $type = $format{++$i};
+                switch ($type) {
                     # Day
                     case 'a':
                         $result .= substr($this->pdate_week_name[$pWeek], 0, 2);
@@ -252,7 +238,7 @@ class Pdate
                         break;
 
                     case 'e':
-                        $result.= $pDay;
+                        $result .= $pDay;
                         break;
 
                     case 'j':
@@ -324,12 +310,9 @@ class Pdate
                     case 'p':
                     case 'P':
                     case 'r':
-                        if(date('a', $timestamp) == 'am')
-                        {
+                        if (date('a', $timestamp) == 'am') {
                             $result .= (($type == 'p') ? 'ق.ظ' : ($type == 'P') ? 'قبل از ظهر' : strftime("%I:%M:%S قبل از ظهر", $timestamp));
-                        }
-                        else
-                        {
+                        } else {
                             $result .= (($type == 'p') ? 'ب.ظ' : ($type == 'P') ? 'بعد از ظهر' : strftime("%I:%M:%S بعد از ظهر", $timestamp));
                         }
                         break;
@@ -345,7 +328,7 @@ class Pdate
                         break;
 
                     case 'F':
-                        $result .= ($pYear . '-' . (($pMonth < 10) ? '0' . $pMonth:$pMonth) . '-' . (($pDay < 10) ? '0' . $pDay : $pDay));
+                        $result .= ($pYear . '-' . (($pMonth < 10) ? '0' . $pMonth : $pMonth) . '-' . (($pDay < 10) ? '0' . $pDay : $pDay));
                         break;
 
                     case 's':
@@ -368,23 +351,20 @@ class Pdate
                     default:
                         $result .= '%' . $type;
                 }
-            }
-            else
-            {
+            } else {
                 $result .= $par;
             }
-            $i ++;
+            $i++;
         }
 
         return $result;
     }
-    
+
     public function DayOfYear($pMonth, $pDay)
     {
         $days = 0;
 
-        for($i = 1; $i < $pMonth; $i ++)
-        {
+        for ($i = 1; $i < $pMonth; $i++) {
             $days += $this->pdate_month_days[$i];
         }
 
@@ -395,8 +375,7 @@ class Pdate
     {
         $mod = ($year % 33);
 
-        if(($mod == 1) or ($mod == 5) or ($mod == 9) or ($mod == 13) or ($mod == 17) or ($mod == 22) or ($mod == 26) or ($mod == 30))
-        {
+        if (($mod == 1) or ($mod == 5) or ($mod == 9) or ($mod == 13) or ($mod == 17) or ($mod == 22) or ($mod == 26) or ($mod == 30)) {
             return 1;
         }
 
@@ -405,8 +384,7 @@ class Pdate
 
     public function pmktime($hour = 0, $minute = 0, $second = 0, $month = 0, $day = 0, $year = 0, $is_dst = -1)
     {
-        if(($hour == 0) && ($minute == 0) && ($second == 0) && ($month == 0) && ($day == 0) && ($year == 0))
-        {
+        if (($hour == 0) && ($minute == 0) && ($second == 0) && ($month == 0) && ($day == 0) && ($year == 0)) {
             return time();
         }
 
@@ -416,15 +394,12 @@ class Pdate
 
     public function pcheckdate($month, $day, $year)
     {
-        if(($month < 1) || ($month > 12) || ($year < 1) || ($year > 32767) || ($day < 1))
-        {
+        if (($month < 1) || ($month > 12) || ($year < 1) || ($year > 32767) || ($day < 1)) {
             return 0;
         }
 
-        if($day > $this->pdate_month_days[$month])
-        {
-            if(($month != 12) || ($day != 30) || !$this->isKabise($year))
-            {
+        if ($day > $this->pdate_month_days[$month]) {
+            if (($month != 12) || ($day != 30) || !$this->isKabise($year)) {
                 return 0;
             }
         }
@@ -434,13 +409,12 @@ class Pdate
 
     public function pgetdate($timestamp = NULL)
     {
-        if(!$timestamp)
-        {
+        if (!$timestamp) {
             $timestamp = mktime();
         }
 
         list($seconds, $minutes, $hours, $mday, $wday, $mon, $year, $yday, $weekday, $month) = explode('-', pdate('s-i-G-j-w-n-Y-z-l-F', $timestamp));
-        return array(0=>$timestamp, 'seconds'=>$seconds, 'minutes'=>$minutes, 'hours'=>$hours, 'mday'=>$mday, 'wday'=>$wday, 'mon'=>$mon, 'year'=>$year, 'yday'=>$yday, 'weekday'=>$weekday, 'month'=>$month);
+        return array(0 => $timestamp, 'seconds' => $seconds, 'minutes' => $minutes, 'hours' => $hours, 'mday' => $mday, 'wday' => $wday, 'mon' => $mon, 'year' => $year, 'yday' => $yday, 'weekday' => $weekday, 'month' => $month);
     }
 
     public function div($a, $b)
@@ -456,14 +430,13 @@ class Pdate
         $gm = $g_m - 1;
         $g_day_no = (365 * $gy + $this->div($gy + 3, 4) - $this->div($gy + 99, 100) + $this->div($gy + 399, 400));
 
-        for($i = 0; $i < $gm; ++ $i)
-        {
+        for ($i = 0; $i < $gm; ++$i) {
             $g_day_no += $g_days_in_month[$i];
         }
 
-        if($gm > 1 && (($gy % 4 == 0 && $gy % 100 != 0) || ($gy % 400 == 0)))
+        if ($gm > 1 && (($gy % 4 == 0 && $gy % 100 != 0) || ($gy % 400 == 0)))
             # leap and after Feb
-            $g_day_no ++;
+            $g_day_no++;
         $g_day_no += $g_d - 1;
         $j_day_no = $g_day_no - 79;
         $j_np = $this->div($j_day_no, 12053); # 12053 = (365 * 33 + 32 / 4)
@@ -471,14 +444,12 @@ class Pdate
         $jy = (979 + 33 * $j_np + 4 * $this->div($j_day_no, 1461)); # 1461 = (365 * 4 + 4 / 4)
         $j_day_no %= 1461;
 
-        if($j_day_no >= 366)
-        {
+        if ($j_day_no >= 366) {
             $jy += $this->div($j_day_no - 1, 365);
             $j_day_no = ($j_day_no - 1) % 365;
         }
 
-        for($i = 0; ($i < 11 && $j_day_no >= $j_days_in_month[$i]); ++ $i)
-        {
+        for ($i = 0; ($i < 11 && $j_day_no >= $j_days_in_month[$i]); ++$i) {
             $j_day_no -= $j_days_in_month[$i];
         }
 
@@ -493,28 +464,24 @@ class Pdate
         $jm = $j_m - 1;
         $j_day_no = (365 * $jy + $this->div($jy, 33) * 8 + $this->div($jy % 33 + 3, 4));
 
-        for($i = 0; $i < $jm; ++ $i)
-        {
+        for ($i = 0; $i < $jm; ++$i) {
             $j_day_no += $j_days_in_month[$i];
         }
 
         $j_day_no += $j_d - 1;
-        $g_day_no= $j_day_no + 79;
+        $g_day_no = $j_day_no + 79;
         $gy = (1600 + 400 * $this->div($g_day_no, 146097)); # 146097 = (365 * 400 + 400 / 4 - 400 / 100 + 400 / 400)
-        $g_day_no= $g_day_no % 146097;
+        $g_day_no = $g_day_no % 146097;
         $leap = 1;
 
-        if($g_day_no >= 36525) # 36525 = (365 * 100 + 100 / 4)
+        if ($g_day_no >= 36525) # 36525 = (365 * 100 + 100 / 4)
         {
-            $g_day_no --;
+            $g_day_no--;
             $gy += (100 * $this->div($g_day_no, 36524)); # 36524 = (365 * 100 + 100 / 4 - 100 / 100)
-            $g_day_no= $g_day_no % 36524;
-            if($g_day_no >= 365)
-            {
-                $g_day_no ++;
-            }
-            else
-            {
+            $g_day_no = $g_day_no % 36524;
+            if ($g_day_no >= 365) {
+                $g_day_no++;
+            } else {
                 $leap = 0;
             }
         }
@@ -522,16 +489,14 @@ class Pdate
         $gy += (4 * $this->div($g_day_no, 1461)); # 1461 = (365 * 4 + 4 / 4)
         $g_day_no %= 1461;
 
-        if($g_day_no >= 366)
-        {
+        if ($g_day_no >= 366) {
             $leap = 0;
-            $g_day_no --;
+            $g_day_no--;
             $gy += $this->div($g_day_no, 365);
             $g_day_no = ($g_day_no % 365);
         }
 
-        for($i = 0; $g_day_no >= ($g_days_in_month[$i] + ($i == 1 && $leap)); $i ++)
-        {
+        for ($i = 0; $g_day_no >= ($g_days_in_month[$i] + ($i == 1 && $leap)); $i++) {
             $g_day_no -= ($g_days_in_month[$i] + ($i == 1 && $leap));
         }
 
